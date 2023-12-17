@@ -1,0 +1,282 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cервис прогнозирования увольнения</title>
+    <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,700;0,800;0,900;1,600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+</head>
+
+<body>
+    <main class="wrapper-main">
+        <!-- MANAGEMENT -->
+        <section class="management">
+            <div class="container container-management">
+                <div class="management-content management-content--analizator">
+                    <div class="main-navigation">
+                        <div class="logo">
+                            <button type="button" class="burger" data-burger aria-expanded="true">
+                                <span class="burger__line"></span>
+                            </button>
+                            <img src="{% static 'img/icon/logo.png' %}" class="logo__img main-navigation-logo" alt="logo">
+                        </div>
+                        <div class="menu-wrapper">
+                            <nav class="menu">
+                                <ul class="menu-list">
+                                    <li class="menu-list__item">
+                                        <a href="{% url 'main' %}" class="menu-list__link">
+                                            <svg class="menu-list__icon" width="23" height="21" viewBox="0 0 23 21"
+                                                fill="none">
+                                                <path
+                                                    d="M11.5 0L0 8.625H2.875V20.125H8.625V14.375H14.375V20.125H20.125V8.53875L23 8.625L11.5 0Z"
+                                                    fill="#6322AD" />
+                                            </svg>
+                                            <span class="menu-list__title">Главная</span>
+                                        </a>
+                                    </li>
+                                    <li class="menu-list__item">
+                                        <a href="{% url 'analizator' %}" class="menu-list__link">
+                                            <svg class="menu-list__icon" width="26" height="26" viewBox="0 0 26 26" fill="none">
+                                                <path
+                                                    d="M11.375 0C8.2225 0 5.395 1.3 3.3475 3.3475L13 13V0.0975C12.48 0.0325 11.9275 0 11.375 0ZM16.25 3.445V14.5275L7.41 23.3675C9.3925 24.9925 11.8625 26 14.625 26C20.8975 26 26 20.8975 26 14.625C26 8.905 21.7425 4.2575 16.25 3.445ZM2.9575 7.7025C1.1375 9.4575 0 11.895 0 14.625C0 17.745 1.495 20.4425 3.77 22.23L10.6925 15.3075L2.9575 7.7025Z" />
+                                            </svg>
+                                            <span class="menu-list__title">Анализатор</span>
+                                        </a>
+                                    </li>
+                                    <li class="menu-list__item">
+                                        <a href="#" class="menu-list__link">
+                                            <svg class="menu-list__icon" width="24" height="24" viewBox="0 0 24 24"
+                                                fill="none">
+                                                <path
+                                                    d="M12 0C8.7 0 6 3.36 6 7.5C6 11.64 8.7 15 12 15C15.3 15 18 11.64 18 7.5C18 3.36 15.3 0 12 0ZM5.73 15C2.55 15.15 0 17.76 0 21V24H24V21C24 17.76 21.48 15.15 18.27 15C16.65 16.83 14.43 18 12 18C9.57 18 7.35 16.83 5.73 15Z" />
+                                            </svg>
+                                            <span class="menu-list__title">Руководители</span>
+                                        </a>
+                                    </li>
+                                    <li class="menu-list__item">
+                                        <a href="#" class="menu-list__link">
+                                            <svg class="menu-list__icon" width="24" height="24" viewBox="0 0 24 24"
+                                                fill="none">
+                                                <path
+                                                    d="M0 0V6H6V0H0ZM9 0V6H15V0H9ZM18 0V6H24V0H18ZM0 9V15H6V9H0ZM9 9V15H15V9H9ZM18 9V15H24V9H18ZM0 18V24H6V18H0ZM9 18V24H15V18H9ZM18 18V24H24V18H18Z" />
+                                            </svg>
+                                            <span class="menu-list__title">Департамент</span>
+                                        </a>
+                                    </li>
+                                    <li class="menu-list__item">
+                                        <a href="#" class="menu-list__link menu-list__link--active">
+                                            <svg class="menu-list__icon" width="24" height="24" viewBox="0 0 24 24"
+                                                fill="none">
+                                                <path
+                                                    d="M16.4794 0C14.9513 0 13.633 1.04869 12.824 2.6367C14.1723 4.25468 14.9813 6.47191 14.9813 9.01873C14.9813 9.88764 14.8914 10.6667 14.7116 11.4457C15.2809 11.7753 15.8502 12.015 16.4794 12.015C18.9663 12.015 20.9738 9.31835 20.9738 6.02247C20.9738 2.72659 18.9663 0.0299625 16.4794 0.0299625V0ZM7.49064 2.99625C5.00375 2.99625 2.99625 5.69288 2.99625 8.98876C2.99625 12.2846 5.00375 14.9813 7.49064 14.9813C9.97753 14.9813 11.985 12.2846 11.985 8.98876C11.985 5.69288 9.97753 2.99625 7.49064 2.99625ZM21.7228 12.4644C20.4345 13.9925 18.6667 14.9213 16.6592 14.9813C17.4682 16.1199 17.9775 17.4981 17.9775 18.9963V20.9738H23.97V16C23.97 14.4419 23.0412 13.0936 21.7228 12.4345V12.4644ZM2.24719 15.4607C0.928839 16.1199 0 17.4682 0 19.0262V24H14.9813V19.0262C14.9813 17.4682 14.0524 16.1199 12.7341 15.4607C11.3858 17.0487 9.55805 17.9775 7.49064 17.9775C5.42322 17.9775 3.59551 17.0187 2.24719 15.4607Z" />
+                                            </svg>
+                                            <span class="menu-list__title">Сотрудники</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                            <nav class="menu">
+                                <ul class="menu-list">
+                                    <li class="menu-list__item">
+                                        <a href="#" class="menu-list__link">
+                                            <svg class="menu-list__icon menu-icon" width="25" height="25" viewBox="0 0 25 25"
+                                                fill="none">
+                                                <path
+                                                    d="M10.9414 0L9.38279 3.70948C9.07107 3.80299 8.79052 3.95885 8.50997 4.11471L4.8005 2.55611L2.55611 4.8005L4.11471 8.50997C3.95885 8.8217 3.83416 9.07107 3.70948 9.38279L0 10.9414V14.0586L3.70948 15.6172C3.83416 15.9289 3.95885 16.1783 4.11471 16.49L2.55611 20.1995L4.8005 22.4439L8.50997 20.8853C8.79052 21.01 9.07107 21.1658 9.38279 21.2905L10.9414 25H14.0586L15.6172 21.2905C15.8978 21.1658 16.2095 21.0411 16.49 20.8853L20.1995 22.4439L22.4439 20.1995L20.8853 16.49C21.01 16.2095 21.1658 15.8978 21.2905 15.6172L25 14.0586V10.9414L21.2905 9.38279C21.197 9.10224 21.0411 8.79052 20.8853 8.50997L22.4439 4.8005L20.1995 2.55611L16.49 4.11471C16.2095 3.99002 15.8978 3.83416 15.6172 3.70948L14.0586 0L10.9414 0ZM12.5 7.79302C15.0873 7.79302 17.1758 9.88155 17.1758 12.4688C17.1758 15.0561 15.0873 17.1446 12.5 17.1446C9.91272 17.1446 7.82419 15.0561 7.82419 12.4688C7.82419 9.88155 9.91272 7.79302 12.5 7.79302Z" />
+                                            </svg>
+                                            <span class="menu-list__title">Настройки</span>
+                                        </a>
+                                    </li>
+                                    <li class="menu-list__item">
+                                        <a href="{% url 'logout' %}" class="menu-list__link">
+                                            <svg class="menu-list__icon menu-icon" width="28" height="24" viewBox="0 0 28 24"
+                                                fill="none">
+                                                <path
+                                                    d="M10.2857 0V3.42857H24V20.5714H10.2857V24H27.4286V0H10.2857ZM6.85714 6.85714L0 12L6.85714 17.1429V13.7143H20.5714V10.2857H6.85714V6.85714Z" />
+                                            </svg>
+                                            <span class="menu-list__title">Выход</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <div class="all-information">
+                        <div class="all-information__header">
+                            <div class="search">
+                                <form action="#" class="form-search">
+                                    <input type="search" class="form-search__input" placeholder="Поиск">
+                                    <button type="button" class="form-search__btn">
+                                        <img src="{% static 'img/icon/Search.svg' %}" class="form-search__icon">
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="notification">
+                                <img src="{% static 'img/icon/tools.svg' %}" class="notification__icon">
+                            </div>
+                            <div class="account">
+                                <a href="{% url 'users-profile' %}">
+                                    <img src="{% static 'img/people/account.png' %}" class="account__icon">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="all-information__body">
+                            <div class="efficiency">
+                                <div class="efficiency__item">
+                                    <div class="circle circle--good" id="download-btn">
+                                        <img src="{% static 'img/icon/good.png' %}" class="efficiency__img" alt="icon">
+                                        <div class="circle-mask">
+                                            <span>Скачать отчет</span>
+                                            <span class="cursor"></span>
+                                        </div>
+                                    </div>
+                                    <div class="efficiency__group">
+                                        <div class="efficiency__title">Успешная производительность</div>
+                                        <div class="efficiency-quantity">
+                                            <div class="efficiency-quantity__text"><span class="max">{{successful_workers}}</span> сотрудника</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="efficiency__item">
+                                    <div class="circle circle--bad" id="download-button">
+                                        <img src="{% static 'img/icon/bad.png' %}" class="efficiency__img" alt="icon">
+                                        <div class="circle-mask">
+                                            <span>Скачать отчет</span>
+                                            <span class="cursor"></span>
+                                        </div>
+                                    </div>
+                                    <div class="efficiency__group">
+                                        <div class="efficiency__title">Низкая производительность</div>
+                                        <div class="efficiency-quantity">
+                                            <div class="efficiency-quantity__text"><span class="min">{{bad_workers}}</span> сотрудников</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="efficiency__item">
+                                    <a href="{% url 'analizator' %}" class="efficiency__link">
+                                        <div class="efficiency__title">Добавить файл</div>
+                                        <div class="circle circle--csv" id="download-btn">
+                                            <img src="{% static 'img/icon/plus.png' %}" class="efficiency__img" alt="icon">
+                                        </div>
+                                        <div class="efficiency__text">Формат файла .CSV</div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            {% if no_info %}
+                            <div class="analizator">
+                                <h2>Список пуст!</h2>
+                                <div class="efficiency-quantity__text">Загрузите информацию в <a href="{% url 'analizator' %}" class="name-column__link">Анализатор</a></div>
+                             </div>
+                            {% else %}
+                            <div class="wrapper-table">
+                                <table class="table-people" id="table-people">
+                                    <thead class="table-header">
+                                        <tr class="table-header__item name-column" id="name-column">
+                                            <td class="table-header__title">Имя сотрудника</td>
+                                            <td><img src="{% static 'img/icon/arrow.svg' %}" class="table-header__icon" id="name-sort" alt="arrow"></td>
+                                        </tr>
+                                        <tr class="table-header__item forecast-column" id="forecast-column">
+                                            <td class="table-header__title">Вероятность увольнения</td>
+                                            <td><img src="{% static 'img/icon/arrow.svg' %}" class="table-header__icon" id="forecast-sort" alt="arrow"></td>
+                                        </tr>
+                                        <tr class="table-header__item deportament-column" id="deportament-column">
+                                            <td class="table-header__title">Департамент</td>
+                                            <td><img src="{% static 'img/icon/arrow.svg' %}" class="table-header__icon" id="deportament-sort" alt="arrow"></td>
+                                        </tr>
+                                        <tr class="table-header__item director-column" id="director-column">
+                                            <td class="table-header__title">Руководитель</td>
+                                            <td><img src="{% static 'img/icon/arrow.svg' %}" class="table-header__icon" id="director-sort" alt="arrow"></td>
+                                        </tr>
+                                        <tr class="table-header__item data-column" id="data-column">
+                                            <td class="table-header__title">Дата</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-tbody">
+                                        {% for worker in workers %}
+                                        <tr class="table-tbody__item" data-id="1">
+                                            <td class="name-column">
+                                                <a href="{% url 'details' worker.id %}" class="name-column__link">
+                                                    <img src="{% static 'img/icon/percon-icon.png' %}" class="name-column__img" alt="avatar">
+                                                    <div class="name-column__group">
+                                                        <div class="name-column__title">{{ worker.name }}</div>
+                                                        <div class="name-column__email">{{ worker.email}}</div>
+                                                    </div>
+                                                </a>
+                                            </td>
+                                            <td class="forecast-column">
+                                                <div class="number-probability number-probability__red" id="probability-1">{{ latest_info|get_percent:worker.worker_id }}</div>
+                                                <div class="load"><div class="load__bg"></div></div>
+                                            </td>
+                                            <td class="deportament-column">
+                                                <div class="deportament-column__text">{{ worker.department }}</div>
+                                            </td>
+                                            <td class="director-column">
+                                                <div class="director-column__text">Иванов Олег В.</div>
+                                            </td>
+                                            <td class="data-column">
+                                                <div class="data-column__text">{{ period_info|get_item:worker.worker_id|date:'d/m/Y' }}</div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% if is_paginated %}  <!-- Pagination block -->
+                            <!-- Previous page and first page -->
+                            <div class="analizator">
+                                <div class="efficiency-quantity__text">
+                            {% if page_obj.has_previous %}
+                                <a href="?page=1">Первая страница</a>&nbsp;
+                                <a href="?page={{ page_obj.previous_page_number }}"><<<</a>&nbsp;
+                            {% endif %}
+                        
+                            <!-- Current page and neigbours -->
+                            {% for num in page_obj.paginator.page_range %}
+                                {% if page_obj.number == num %}
+                                    <a>{{ num }}</a>&nbsp;
+                                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                    <a href="?page={{ num }}">{{ num }}</a>&nbsp;
+                                {% endif %}
+                            {% endfor %}
+                        
+                            <!-- Next page and last page link -->
+                            {% if page_obj.has_next %}
+                                <a href="?page={{ page_obj.next_page_number }}">>>></a>&nbsp;
+                                <a href="?page={{ page_obj.paginator.num_pages }}">Последняя страница</a>
+                            {% endif %}
+                                </div>
+                            </div>
+                            {% endif %}
+
+
+                            
+                                
+                            
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- MANAGEMENT -->
+    </main>
+    <script src="{% static 'js/onload-people-good.js' %}"></script>
+    <script src="{% static 'js/onload-people-badly.js' %}"></script>
+    <script src="{% static 'js/loading-bg.js' %}"></script>
+    <script src="{% static 'js/sort-table.js' %}"></script>
+    <script src="{% static 'js/burger-menu.js' %}"></script>
+    <script src="{% static 'js/mobile-menu.js' %}"></script>
+</body>
+
+</html>

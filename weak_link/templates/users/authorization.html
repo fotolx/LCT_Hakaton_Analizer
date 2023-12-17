@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анализатор - сервис прогнозирования увольнения</title>
+    <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,700;0,800;0,900;1,600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <main>
+        <!-- AUTHORIZATION -->
+        <section class="authorization">
+            <div class="container container-authorization">
+                <div class="authorization-content">
+                    <div class="authorization-content__form">
+                        <div class="header-authorization">
+                            <div class="logo">
+                                <img src="{% static 'img/icon/logo.png' %}" alt="logo">
+                            </div>
+                        </div>
+
+                        <div class="body-authorization">
+                            <div class="body-authorization__title">Вход</div>
+                            <form action="#" method="post" id="authorizationForm" class="form-authorization">
+                                {% csrf_token %}
+                                <div class="form-authorization__group">
+                                    <label for="authorization-name">Ваш логин</label>
+                                    <input type="text" 
+                                           id="authorization-name" 
+                                           name="username" 
+                                           class="form-authorization__input"
+                                           placeholder="Введите логин" required>
+                                </div>
+                                <div class="form-authorization__group">
+                                    <label for="authorization-password">Пароль</label>
+                                    <input type="password" 
+                                           id="authorization-password" 
+                                           name="password"
+                                           class="form-authorization__input" 
+                                           placeholder="Введите пароль" required>
+                                </div>
+                                <button type="submit" id="authorizationBtn" class="btn" disabled>Войти</button>
+                            </form>
+                            <a href="#" class="remember-password">Забыл пароль</a>
+                        </div>
+
+                        <div class="footer-content">
+                            <div class="footer-content__text">Ещё нет аккаунта?</div>
+                            <a href="{% url 'users-register' %}" class="footer-content__authorization">Зарегистрироваться</a>
+                        </div>
+                    </div>
+                    <div class="authorization-content__illustr">
+                        <div class="technologies-image">
+                            <img src="{% static 'img/main/technologies.png' %}" alt="technologies">
+                        </div>
+                        <div class="technologies-text">
+                            <span>Сервис прогнозирования увольнения</span>
+                        </div>
+                        <div class="technologies-text">на основе вовлеченности сотрудника</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- AUTHORIZATION -->
+    </main>
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+
+</html>
